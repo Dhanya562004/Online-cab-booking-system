@@ -1,0 +1,28 @@
+.history-page { max-width: 700px; margin: 0 auto; padding: 20px; }
+.history-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+.history-header h1 { margin: 0; font-size: 24px; }
+.back-link { background: none; border: 1px solid #ddd; border-radius: 8px; padding: 6px 14px; cursor: pointer; font-size: 14px; }
+.loading-msg, .error-msg { text-align: center; padding: 20px; color: #666; }
+.error-msg { color: #ef4444; }
+.empty-state { text-align: center; padding: 60px 20px; }
+.empty-state p { font-size: 18px; color: #666; margin-bottom: 20px; }
+.submit-btn { background: #3b82f6; color: white; border: none; border-radius: 10px; padding: 12px 28px; font-size: 15px; cursor: pointer; }
+.rides-list { display: flex; flex-direction: column; gap: 16px; }
+.ride-card { background: white; border: 1px solid #e5e7eb; border-radius: 14px; padding: 18px; }
+.ride-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.ride-date { font-size: 13px; color: #6b7280; }
+.ride-status { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px; text-transform: capitalize; }
+.status-completed { background: #d1fae5; color: #065f46; }
+.ride-route { margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px; }
+.route-point { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.green-dot { background: #22c55e; }
+.red-dot { background: #ef4444; }
+.ride-card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid #f3f4f6; }
+.ride-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+.ride-meta span { font-size: 12px; color: #6b7280; background: #f9fafb; padding: 3px 8px; border-radius: 6px; }
+.ride-fare { font-size: 18px; font-weight: 700; color: #111; }
+.ride-rating { margin-top: 10px; font-size: 16px; color: #f59e0b; }
+.ride-review { font-size: 13px; color: #6b7280; font-style: italic; }
+.rate-btn { margin-top: 10px; background: none; border: 1px solid #3b82f6; color: #3b82f6; padding: 6px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; }
+.rate-btn:hover { background: #eff6ff; }

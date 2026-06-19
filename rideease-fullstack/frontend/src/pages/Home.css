@@ -1,0 +1,51 @@
+.home { min-height: 100vh; }
+
+.hero {
+  background: #3b82f6;
+  color: white;
+  text-align: center;
+  padding: 56px 20px 72px;
+}
+.hero-car-icon {
+  background: rgba(255,255,255,0.2);
+  width: 72px; height: 72px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+}
+.hero h1 {
+  font-size: 2.6rem; font-weight: 800; margin-bottom: 14px;
+}
+.hero p {
+  font-size: 0.95rem; opacity: 0.9;
+  max-width: 500px; margin: 0 auto 32px; line-height: 1.7;
+}
+.hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-login, .btn-register {
+  padding: 11px 32px; border-radius: 8px;
+  font-size: 0.88rem; font-weight: 700; cursor: pointer;
+  border: 2px solid white; letter-spacing: 0.5px;
+  transition: all 0.2s;
+}
+.btn-login { background: white; color: #3b82f6; }
+.btn-login:hover { background: transparent; color: white; }
+.btn-register { background: transparent; color: white; }
+.btn-register:hover { background: white; color: #3b82f6; }
+
+.features {
+  padding: 56px 20px;
+  max-width: 960px; margin: 0 auto; text-align: center;
+}
+.features h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 10px; }
+.features-sub { color: #666; margin-bottom: 40px; font-size: 0.92rem; }
+.features-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 32px 20px;
+}
+@media(max-width:600px){
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .hero h1 { font-size: 1.8rem; }
+}
+.feat { text-align: center; }
+.feat-icon { font-size: 2rem; margin-bottom: 10px; color: #3b82f6; }
+.feat h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; }
+.feat p { font-size: 0.83rem; color: #666; line-height: 1.5; }

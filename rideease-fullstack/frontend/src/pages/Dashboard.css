@@ -1,0 +1,124 @@
+.dashboard { min-height: 100vh; background: #f9fafb; }
+
+.dash-header {
+  background: white; border-bottom: 1px solid #e5e7eb;
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.dash-header h1 { font-size: 1.35rem; font-weight: 700; }
+.dash-header-right { display: flex; align-items: center; gap: 14px; }
+.user-greeting { font-size: 0.88rem; color: #555; }
+.logout-btn {
+  background: none; border: 1px solid #d1d5db;
+  border-radius: 6px; padding: 6px 14px;
+  cursor: pointer; font-size: 0.87rem; color: #555;
+  transition: background 0.2s;
+}
+.logout-btn:hover { background: #f3f4f6; }
+
+.dash-body {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px; padding: 24px;
+  max-width: 1100px; margin: 0 auto;
+}
+@media(max-width:768px){ .dash-body { grid-template-columns: 1fr; } }
+
+/* Map */
+.map-section { display: flex; flex-direction: column; gap: 8px; }
+.map-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+.map-btn {
+  padding: 8px 16px; border: 1px solid #d1d5db;
+  border-radius: 6px; background: white; cursor: pointer;
+  font-size: 0.83rem; font-weight: 500; color: #374151;
+  transition: all 0.2s;
+}
+.map-btn:hover { background: #f3f4f6; }
+.map-btn-active { background: #3b82f6 !important; color: white !important; border-color: #3b82f6 !important; }
+
+.map-wrap {
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid #e5e7eb; height: 400px;
+  position: relative;
+}
+.map-crosshair { cursor: crosshair; }
+.map-fallback {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #e8f4fd, #dbeafe 50%, #e0e7ff);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 8px; text-align: center; padding: 20px;
+}
+.map-fallback p:first-child { font-size: 2.5rem; }
+.map-note { font-size: 0.82rem; color: #6b7280; }
+.map-note code { background: #e5e7eb; padding: 2px 5px; border-radius: 3px; font-size: 0.78rem; }
+.map-hint { font-size: 0.85rem; color: #3b82f6; background: #eff6ff; padding: 6px 12px; border-radius: 4px; }
+
+.map-attr { font-size: 0.72rem; color: #9ca3af; }
+.map-attr a { color: #9ca3af; text-decoration: underline; }
+
+/* Custom markers */
+.pickup-marker {
+  width: 20px; height: 20px;
+  background: #22c55e; border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+.drop-marker {
+  width: 20px; height: 20px;
+  background: #ef4444; border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* Ride panel */
+.ride-panel {
+  background: white; border-radius: 12px;
+  padding: 22px; border: 1px solid #e5e7eb; height: fit-content;
+}
+.ride-panel h2 { font-size: 1.05rem; font-weight: 700; margin-bottom: 18px; }
+
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 0.83rem; font-weight: 500; color: #374151; margin-bottom: 5px; }
+.form-group input, .form-group select {
+  width: 100%; padding: 10px 12px;
+  border: 1px solid #d1d5db; border-radius: 6px;
+  font-size: 0.9rem; outline: none; transition: border-color 0.2s; background: white;
+}
+.form-group input:focus, .form-group select:focus { border-color: #3b82f6; }
+.input-highlight { border-color: #3b82f6 !important; background: #eff6ff !important; }
+
+.calc-btn {
+  width: 100%; padding: 11px;
+  background: #1d4ed8; color: white;
+  border: none; border-radius: 8px;
+  font-size: 0.92rem; font-weight: 600;
+  cursor: pointer; transition: background 0.2s;
+}
+.calc-btn:hover { background: #1e40af; }
+
+/* Fare box */
+.fare-box {
+  margin-top: 18px; border: 1px solid #e5e7eb;
+  border-radius: 8px; padding: 16px; background: #fafafa;
+}
+.fare-box h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 12px; color: #111; }
+.fare-row {
+  display: flex; justify-content: space-between;
+  font-size: 0.87rem; color: #555; padding: 4px 0;
+}
+.fare-row span:first-child { color: #888; }
+.fare-total {
+  font-weight: 700; font-size: 0.97rem;
+  color: #111; border-top: 1px solid #e5e7eb;
+  margin-top: 8px; padding-top: 10px;
+}
+.fare-total span { color: #111 !important; }
+
+.confirm-btn {
+  width: 100%; margin-top: 14px; padding: 11px;
+  background: #22c55e; color: white;
+  border: none; border-radius: 8px;
+  font-size: 0.95rem; font-weight: 600;
+  cursor: pointer; transition: background 0.2s;
+}
+.confirm-btn:hover { background: #16a34a; }
