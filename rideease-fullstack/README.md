@@ -1,110 +1,79 @@
-# RideEase - Fullstack Cab Booking App
+# RideEase Fullstack App Architecture & Reference
 
-React + Node.js + Express + PostgreSQL
+This directory holds the main application code, separated into the React frontend and Express backend.
 
-## Project Structure
+## Architecture Overview
 
-```
-rideease-fullstack/
-├── backend/
-│   ├── db/
-│   │   ├── index.js        # PostgreSQL connection
-│   │   └── schema.sql      # Run this first to create tables
-│   ├── middleware/
-│   │   └── auth.js         # JWT auth + admin middleware
-│   ├── routes/
-│   │   ├── auth.js         # POST /api/auth/register, /login
-│   │   ├── rides.js        # POST /api/rides, GET /api/rides/history, rate
-│   │   └── admin.js        # GET /api/admin/stats, users, rides
-│   ├── server.js
-│   ├── package.json
-│   └── .env.example        # Copy to .env and fill in values
-│
-└── frontend/
-    ├── src/
-    │   ├── api.js           # All fetch() calls in one place
-    │   ├── App.js
-    │   └── pages/
-    │       ├── Home.js           (unchanged)
-    │       ├── Login.js          (updated - uses backend)
-    │       ├── Register.js       (updated - uses backend)
-    │       ├── Dashboard.js      (updated - logout uses JWT)
-    │       ├── Payment.js        (updated - saves ride to DB)
-    │       ├── RideHistory.js    (NEW)
-    │       ├── RateRide.js       (NEW)
-    │       └── AdminDashboard.js (NEW)
-    └── package.json
-```
+### Frontend (`/frontend`)
+The frontend is a React application that communicates with the backend via JSON APIs.
+*   **`src/api.js`**: Contains centralized fetch helper functions for auth, rides, and admin requests. Rather than scattered fetch calls, all HTTP calls route through here.
+*   **`src/App.js`**: Main component that manages global user state (authenticated user object, JWT token) and handles routing/views.
+*   **`src/pages/`**: Single-page views:
+    *   `Home.js`: Initial view where riders can select pickup/drop-off locations and choose a cab type to estimate fares.
+    *   `Payment.js`: Simulates card payment and triggers the API call to save the ride.
+    *   `RideHistory.js`: Displays a list of all past rides completed by the logged-in user.
+    *   `RateRide.js`: Simple rating view allowing users to leave star ratings and feedback for their rides.
+    *   `AdminDashboard.js`: Dashboard restricted to admin users, displaying platform analytics (total users, total revenue, average ratings) and tables listing all users and rides in the system.
 
-## Setup Instructions
+### Backend (`/backend`)
+The backend is a Node.js/Express application connecting to a PostgreSQL database.
+*   **`server.js`**: Entry point. Sets up Express, configures CORS and JSON parsing, mounts the API routes, and starts listening on port 5000.
+*   **`db/index.js`**: Initializes the pg-pool connection using the `DATABASE_URL` environment variable.
+*   **`middleware/auth.js`**: Custom middleware verifying the `Authorization` header's JWT. It decodes the token and attaches the user payload to `req.user`. It also includes a secondary `adminOnly` helper that checks the user's role before allowing access.
+*   **`routes/`**: Route handlers:
+    *   `auth.js`: User signup and login endpoints. Password hashes are generated and verified using `bcryptjs`.
+    *   `rides.js`: Fetching and saving ride details, and rating specific rides.
+    *   `admin.js`: Administrative metrics and full listings of platform data.
 
-### Step 1 — PostgreSQL Database
+---
 
-1. Install PostgreSQL from https://www.postgresql.org/download/
-2. Open psql and run:
+## Database Model
 
-```sql
-CREATE DATABASE rideease;
-\c rideease
-\i backend/db/schema.sql
-```
+The database uses PostgreSQL and consists of three related tables:
 
-### Step 2 — Backend
+1.  **`users`**: Stores credentials and roles.
+    *   `id` (serial, primary key)
+    *   `username` (unique, varchar)
+    *   `email` (unique, varchar)
+    *   `password` (hashed with bcrypt, varchar)
+    *   `account_type` (defaults to 'rider', varchar)
+    *   `role` (defaults to 'user', admin users set to 'admin')
+2.  **`rides`**: Stores booking records.
+    *   `id` (serial, primary key)
+    *   `user_id` (foreign key referencing `users.id`)
+    *   `pickup` & `drop_location` (varchar)
+    *   `distance` (decimal)
+    *   `fare` (integer)
+    *   `status` (defaults to 'completed')
+3.  **`ratings`**: Stores feedback for completed rides.
+    *   `id` (serial, primary key)
+    *   `ride_id` (foreign key referencing `rides.id`)
+    *   `user_id` (foreign key referencing `users.id`)
+    *   `stars` (integer, checked 1 to 5)
+    *   `review` (text)
 
-```bash
-cd backend
-cp .env.example .env
-```
+---
 
-Edit `.env` and set your PostgreSQL password:
-```
-DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5432/rideease
-JWT_SECRET=any_long_random_string_here
-```
+## API Documentation
 
-Then:
-```bash
-npm install
-npm run dev
-```
+All routes expect JSON payloads and return JSON responses. Protected routes require a valid JWT passed in the `Authorization` header (`Bearer <token>`).
 
-Backend runs on http://localhost:5000
+### Authentication Routes (`/api/auth`)
+*   **`POST /register`**: Register a new user account.
+    *   Payload: `{ username, email, password }`
+    *   Returns: `{ token, user: { id, username, email, account_type, role } }`
+*   **`POST /login`**: Logs in an existing user.
+    *   Payload: `{ username, password }`
+    *   Returns: JWT token and user info block.
 
-### Step 3 — Frontend
+### Ride Routes (`/api/rides`)
+*   **`POST /`** (Protected): Create and save a new completed ride.
+    *   Payload: `{ pickup, drop_location, distance, duration_min, ride_type, fare, payment_method }`
+*   **`GET /history`** (Protected): Fetch all past rides for the authenticated user.
+*   **`POST /:id/rate`** (Protected): Submit a rating and optional text review for a completed ride.
+    *   Payload: `{ stars, review }`
 
-```bash
-cd frontend
-npm install
-npm start
-```
-
-Frontend runs on http://localhost:3000
-
-### Step 4 — Admin Login
-
-Default admin account:
-- Username: `admin`
-- Password: `password`
-
-> Change the admin password after first login.
-
-## API Endpoints
-
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | /api/auth/register | No | Register new user |
-| POST | /api/auth/login | No | Login, returns JWT |
-| POST | /api/rides | Yes | Save a completed booking |
-| GET | /api/rides/history | Yes | Get user's ride history |
-| POST | /api/rides/:id/rate | Yes | Rate a ride |
-| GET | /api/admin/stats | Admin | Summary stats |
-| GET | /api/admin/users | Admin | All users list |
-| GET | /api/admin/rides | Admin | All rides list |
-
-## New Features Added
-
-- **Ride History** — `/history` page shows all past bookings with fare, route, rating
-- **Rate Your Ride** — After payment, users rate their ride with stars + review
-- **Admin Dashboard** — `/admin` shows total users, revenue, avg rating, all rides
-- **JWT Authentication** — Secure login with tokens instead of localStorage
-- **PostgreSQL** — All data stored in a real database permanently
+### Admin Routes (`/api/admin`)
+*   **`GET /stats`** (Admin Only): Returns overall platform metrics (total users, total revenue, average system rating).
+*   **`GET /users`** (Admin Only): Returns a list of all registered users in the database.
+*   **`GET /rides`** (Admin Only): Returns a list of all booked rides in the database.

@@ -1,89 +1,79 @@
-# RideEase — Online Cab Booking System
+# RideEase - Online Cab Booking System
 
-RideEase is a modern, full-stack online cab booking application built using **React**, **Node.js (Express)**, and **PostgreSQL**. The project features comprehensive user booking flows, ride history, rating systems, and a dedicated admin dashboard for monitoring platform analytics and transactions.
+RideEase is a full-stack web application designed for booking cabs. The project is split into a React frontend and a Node.js/Express backend, with PostgreSQL handling the database.
 
----
+It supports user authentication, a simulated ride booking process with fare estimation, ride history tracking, rating features, and a simple admin panel to monitor system statistics.
 
-## 🚀 Key Features
+## Project Structure
 
-*   **Secure Authentication:** User registration and login utilizing JSON Web Tokens (JWT) for secure session management.
-*   **Cab Booking & Fare Estimation:** Calculate route distances and fares, process mockup payments, and persist ride records.
-*   **Ride History:** View all past ride bookings, search details, check fares, and review ratings.
-*   **Interactive Rating System:** Submit post-ride reviews and ratings (1 to 5 stars) for ride experiences.
-*   **Admin Dashboard:** Dedicated admin page featuring aggregate stats (total users, total revenue, average ratings) and administrative tables for all users and rides.
+The project is structured as a monorepo containing both the frontend and backend:
 
----
+*   **`rideease-fullstack/backend`**: Express server handling API requests, database queries, and JWT authentication middleware.
+*   **`rideease-fullstack/frontend`**: React single-page application built with components and state management.
 
-## 🛠️ Technology Stack
+For more technical details on the backend endpoints and schema, see the [rideease-fullstack/README.md](file:///c:/Users/Deeksha/OneDrive/Documents/online%20cab%20booking/rideease-fullstack/README.md).
 
-| Layer | Technology |
-| :--- | :--- |
-| **Frontend** | React, CSS, Fetch API |
-| **Backend** | Node.js, Express, JWT, CORS |
-| **Database** | PostgreSQL |
+## Getting Started
 
----
-
-## 📁 Repository Structure
-
-The codebase is organized as follows:
-
-```text
-online-cab-booking/
-├── .gitignore
-├── README.md                          # Root project documentation (this file)
-└── rideease-fullstack/                # Core full-stack application folder
-    ├── README.md                      # Detailed setup and API specifications
-    ├── backend/                       # Express server and DB scripts
-    │   ├── server.js                  # Main entry point
-    │   ├── db/                        # Database configuration and schema
-    │   ├── middleware/                # JWT and authorization helpers
-    │   └── routes/                    # API endpoints (auth, rides, admin)
-    └── frontend/                      # React SPA
-        ├── package.json
-        └── src/                       # Components, pages, and API handlers
-```
-
-For detailed configurations, API documentation, and folder breakdowns, see the [rideease-fullstack/README.md](file:///c:/Users/Deeksha/OneDrive/Documents/online%20cab%20booking/rideease-fullstack/README.md).
+### Prerequisites
+Make sure you have the following installed on your machine:
+- Node.js (v16+)
+- npm
+- PostgreSQL
 
 ---
 
-## ⚡ Quick Start Guide
+### Step-by-Step Setup
 
-### 1. Database Setup
-Ensure PostgreSQL is installed and running, then execute the database setup:
+#### 1. Setup the Database
+Create a PostgreSQL database and run the schema SQL script to set up the tables:
+
 ```sql
 CREATE DATABASE rideease;
--- Connect to the database and run backend/db/schema.sql
 \c rideease
 \i rideease-fullstack/backend/db/schema.sql
 ```
 
-### 2. Backend Setup
-Navigate to the backend directory, install packages, set up your `.env`, and start the server:
-```bash
-cd rideease-fullstack/backend
-cp .env.example .env
-# Edit .env and configure DATABASE_URL and JWT_SECRET
-npm install
-npm run dev
-```
-The server will run on `http://localhost:5000`.
+This creates the `users`, `rides`, and `ratings` tables and inserts a default admin account.
 
-### 3. Frontend Setup
-Navigate to the frontend directory, install dependencies, and run the React app:
-```bash
-cd rideease-fullstack/frontend
-npm install
-npm start
-```
-The client app will launch at `http://localhost:3000`.
+#### 2. Start the Backend Server
+1. Go to the backend directory:
+   ```bash
+   cd rideease-fullstack/backend
+   ```
+2. Copy the example environment file:
+   ```bash
+   cp .env.example .env
+   ```
+3. Update the `.env` file with your PostgreSQL connection URL and a random string for the `JWT_SECRET`:
+   ```env
+   DATABASE_URL=postgresql://postgres:<your_password>@localhost:5432/rideease
+   JWT_SECRET=some_random_secret_string
+   ```
+4. Install the dependencies and start the dev server:
+   ```bash
+   npm install
+   npm run dev
+   ```
+   The backend will be running on `http://localhost:5000`.
+
+#### 3. Start the Frontend Application
+1. Go to the frontend directory:
+   ```bash
+   cd rideease-fullstack/frontend
+   ```
+2. Install the frontend dependencies and run the React app:
+   ```bash
+   npm install
+   npm start
+   ```
+   This will open the frontend app in your browser at `http://localhost:3000`.
 
 ---
 
-## 👥 Admin Access
-Default admin credentials for system verification:
-*   **Username:** `admin`
-*   **Password:** `password`
+## Testing Credentials
 
-*(Please remember to update default administrator passwords in production environments.)*
+You can register a new user to test the rider flow. To test administrative features, use the default administrator credentials:
+
+*   **Username:** `admin`
+*   **Password:** `password` (Note: the SQL schema also references `Admin@123` depending on setup, but `password` is the default hashed value).
