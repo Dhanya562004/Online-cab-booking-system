@@ -1,79 +1,95 @@
 # RideEase Fullstack App Architecture & Reference
 
-This directory holds the main application code, separated into the React frontend and Express backend.
+## Overview
+This directory contains the main application code for RideEase, separated into the React frontend and Spring Boot backend. 
 
-## Architecture Overview
+Here is a high-level view of how they interact:
+```
+                       ┌────────────────┐
+                       │ React Frontend │
+                       └───────┬────────┘
+                               │
+                      HTTP / JSON REST API
+                               │
+                       ┌───────▼────────┐
+                       │  Spring Boot   │
+                       └───────┬────────┘
+                               │
+                            JDBC/JPA
+                               │
+                      ┌────────▼────────┐
+                      │   PostgreSQL    │
+                      └─────────────────┘
+```
 
-### Frontend (`/frontend`)
-The frontend is a React application that communicates with the backend via JSON APIs.
-*   **`src/api.js`**: Contains centralized fetch helper functions for auth, rides, and admin requests. Rather than scattered fetch calls, all HTTP calls route through here.
-*   **`src/App.js`**: Main component that manages global user state (authenticated user object, JWT token) and handles routing/views.
-*   **`src/pages/`**: Single-page views:
-    *   `Home.js`: Initial view where riders can select pickup/drop-off locations and choose a cab type to estimate fares.
-    *   `Payment.js`: Simulates card payment and triggers the API call to save the ride.
-    *   `RideHistory.js`: Displays a list of all past rides completed by the logged-in user.
-    *   `RateRide.js`: Simple rating view allowing users to leave star ratings and feedback for their rides.
-    *   `AdminDashboard.js`: Dashboard restricted to admin users, displaying platform analytics (total users, total revenue, average ratings) and tables listing all users and rides in the system.
+## Features
+*   **React Frontend (`/frontend`):**
+    *   `src/api.js`: Handles API configuration and passes the JWT token from `localStorage` in API headers.
+    *   `src/App.js`: Protects private routes and sets up URL routing.
+    *   `src/pages/`: Houses views for Guest Home, Rider Dashboard (map & fare selector), Simulated Checkout, Ride History, Feedback, and Admin Dashboard.
+*   **Spring Boot Backend (`/backend`):**
+    *   `controller/`: Maps REST endpoints.
+    *   `model/`: Entity classes representing database tables.
+    *   `repository/`: Database interface interfaces for database queries.
+    *   `security/`: Custom filters validating JWT token authenticity.
+    *   `service/`: Core business operations logic.
 
-### Backend (`/backend`)
-The backend is a Node.js/Express application connecting to a PostgreSQL database.
-*   **`server.js`**: Entry point. Sets up Express, configures CORS and JSON parsing, mounts the API routes, and starts listening on port 5000.
-*   **`db/index.js`**: Initializes the pg-pool connection using the `DATABASE_URL` environment variable.
-*   **`middleware/auth.js`**: Custom middleware verifying the `Authorization` header's JWT. It decodes the token and attaches the user payload to `req.user`. It also includes a secondary `adminOnly` helper that checks the user's role before allowing access.
-*   **`routes/`**: Route handlers:
-    *   `auth.js`: User signup and login endpoints. Password hashes are generated and verified using `bcryptjs`.
-    *   `rides.js`: Fetching and saving ride details, and rating specific rides.
-    *   `admin.js`: Administrative metrics and full listings of platform data.
+## Technologies Used
+This project is built using:
+*   **Frontend:** React.js, HTML, CSS, JavaScript
+*   **Backend:** Spring Boot
+*   **Database:** PostgreSQL
 
----
+## Project Structure
+Here's how the sub-project is structured:
+```
+rideease-fullstack/
+├── backend/                       # Spring Boot REST API
+│   ├── src/main/java/             # Source files
+│   └── pom.xml                    # Maven build file
+└── frontend/                      # React SPA
+    ├── src/                       # Components, helpers, and page views
+    └── package.json               # Frontend dependencies
+```
 
-## Database Model
+## Installation & Setup
+For detailed guide instructions on configuring PostgreSQL, importing schemas, setting properties, and starting backend/frontend run servers, please refer directly to the [Root Setup Guide](../README.md).
 
-The database uses PostgreSQL and consists of three related tables:
+## Usage
+*   **API Security:** All protected endpoints require a valid JWT token sent within the `Authorization: Bearer <token>` header.
+*   **Auth Endpoints (`/api/auth`):**
+    *   `POST /register` - Payload: `{ username, email, password }`
+    *   `POST /login` - Payload: `{ username, password }`
+*   **Rides Endpoints (`/api/rides`):**
+    *   `POST /` - Register a completed booking
+    *   `GET /history` - Fetch authenticated user's logs
+    *   `POST /{id}/rate` - Submit feedback reviews
+*   **Admin Endpoints (`/api/admin`):**
+    *   `GET /stats` - Overall stats summary (Admin only)
+    *   `GET /users` - Retrieve all accounts (Admin only)
+    *   `GET /rides` - Retrieve all transaction logs (Admin only)
 
-1.  **`users`**: Stores credentials and roles.
-    *   `id` (serial, primary key)
-    *   `username` (unique, varchar)
-    *   `email` (unique, varchar)
-    *   `password` (hashed with bcrypt, varchar)
-    *   `account_type` (defaults to 'rider', varchar)
-    *   `role` (defaults to 'user', admin users set to 'admin')
-2.  **`rides`**: Stores booking records.
-    *   `id` (serial, primary key)
-    *   `user_id` (foreign key referencing `users.id`)
-    *   `pickup` & `drop_location` (varchar)
-    *   `distance` (decimal)
-    *   `fare` (integer)
-    *   `status` (defaults to 'completed')
-3.  **`ratings`**: Stores feedback for completed rides.
-    *   `id` (serial, primary key)
-    *   `ride_id` (foreign key referencing `rides.id`)
-    *   `user_id` (foreign key referencing `users.id`)
-    *   `stars` (integer, checked 1 to 5)
-    *   `review` (text)
+## Future Improvements
+*   **WebSockets Integration:** Live vehicle position rendering and map tracking.
+*   **Stripe Sandbox Checkout:** Real card transaction processor verification.
+*   **Companion Portals:** Driver-dedicated dispatch views.
+*   **Vouchers and Discounts:** Dynamic promo code validation.
 
----
+## Challenges & Learning
+*   **Client State Coordination:** Managing Leaflet layers and React lifecycle updates smoothly.
+*   **Spring Security stateless filtering:** Applying secure interceptors correctly to authorize administrator endpoints.
+*   **JPA Relational Queries:** Aggregating metrics database rows into unified performance summaries.
 
-## API Documentation
+## Contributing
+Contributions are always welcome!
+1. Fork the Repository.
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
 
-All routes expect JSON payloads and return JSON responses. Protected routes require a valid JWT passed in the `Authorization` header (`Bearer <token>`).
+## Author
+Dhanya K
 
-### Authentication Routes (`/api/auth`)
-*   **`POST /register`**: Register a new user account.
-    *   Payload: `{ username, email, password }`
-    *   Returns: `{ token, user: { id, username, email, account_type, role } }`
-*   **`POST /login`**: Logs in an existing user.
-    *   Payload: `{ username, password }`
-    *   Returns: JWT token and user info block.
-
-### Ride Routes (`/api/rides`)
-*   **`POST /`** (Protected): Create and save a new completed ride.
-    *   Payload: `{ pickup, drop_location, distance, duration_min, ride_type, fare, payment_method }`
-*   **`GET /history`** (Protected): Fetch all past rides for the authenticated user.
-*   **`POST /:id/rate`** (Protected): Submit a rating and optional text review for a completed ride.
-    *   Payload: `{ stars, review }`
-
-### Admin Routes (`/api/admin`)
-*   **`GET /stats`** (Admin Only): Returns overall platform metrics (total users, total revenue, average system rating).
-*   **`GET /users`** (Admin Only): Returns a list of all registered users in the database.
-*   **`GET /rides`** (Admin Only): Returns a list of all booked rides in the database.
+GitHub: @Dhanya562004
+Email: kdhanya762@gmail.com
