@@ -35,10 +35,23 @@ Here is a high-level view of how they interact:
     *   `config/`: CORS policies, JWT token authentication filters, and Spring Security configurations.
 
 ## Technologies Used
-This project is built using:
-*   **Frontend:** React.js, HTML, CSS, JavaScript
-*   **Backend:** Spring Boot
-*   **Database:** PostgreSQL
+
+This project leverages a robust, modern full-stack web stack to deliver a seamless cab booking experience:
+
+### Frontend (Client-Side)
+* **React.js (v18.2.0)** - Powers the Single Page Application (SPA), managing responsive UI components, user auth states, routing, and history logs.
+* **Leaflet.js (v1.9.4)** - Renders interactive maps, allowing users to dynamically drop markers for pickup/destination points.
+* **OpenStreetMap (OSM) & Nominatim API** - Handshakes OSM graphics for tiling and coordinates geocoding, resolving pinned latitude/longitude values into readable addresses.
+* **Custom Vanilla CSS** - Tailored, responsive layout designs and UI modals written entirely in vanilla CSS for optimal lightweight performance.
+
+### Backend (Server-Side)
+* **Spring Boot (v3.3.0)** - Serves as the primary REST API web engine, exposing controller endpoints for authentication, trip handling, and administration logs.
+* **Spring Security** - Restricts endpoint access, sets CORS configurations, and handles role-based authorization for administrative pathways.
+* **JSON Web Tokens (JJWT v0.11.5)** - Houses session parameters in cryptographically signed stateless tokens, allowing authenticated communication via HTTP headers.
+* **BCrypt Hashing** - Securely hashes password credentials using salt rounds before committing them to the storage layer.
+
+### Database (Data Persistence)
+* **PostgreSQL** - Handles robust relational database management. Includes tables for `users` (credentials and authorization levels), `rides` (coordinate logs, calculations, and statuses), and `ratings` (feedback and reviews).
 
 ## Project Structure
 Here's how the sub-project is structured:
