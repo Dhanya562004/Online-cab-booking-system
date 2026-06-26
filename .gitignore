@@ -5,3 +5,11 @@ dist/
 build/
 .DS_Store
 .vscode/
+
+# Maven/Java Build Excludes
+target/
+*.class
+.idea/
+*.iml
+.metadata/
+*.log

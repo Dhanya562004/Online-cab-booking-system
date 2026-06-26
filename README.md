@@ -68,7 +68,7 @@ Before you get started, make sure you have these installed on your machine:
    ```bash
    ./mvnw spring-boot:run
    ```
-   The backend API should now be running at `http://localhost:8080`.
+   The backend API should now be running at `http://localhost:5000`.
 
 ### Step 3: Set up the Frontend (React)
 1. Open a new terminal window and head to the frontend folder:

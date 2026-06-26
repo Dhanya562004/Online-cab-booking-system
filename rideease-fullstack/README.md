@@ -28,11 +28,11 @@ Here is a high-level view of how they interact:
     *   `src/App.js`: Protects private routes and sets up URL routing.
     *   `src/pages/`: Houses views for Guest Home, Rider Dashboard (map & fare selector), Simulated Checkout, Ride History, Feedback, and Admin Dashboard.
 *   **Spring Boot Backend (`/backend`):**
-    *   `controller/`: Maps REST endpoints.
-    *   `model/`: Entity classes representing database tables.
-    *   `repository/`: Database interface interfaces for database queries.
-    *   `security/`: Custom filters validating JWT token authenticity.
-    *   `service/`: Core business operations logic.
+    *   `controller/`: Maps REST API endpoints (Authentication, Rides, and Admin tasks).
+    *   `model/`: Entity classes representing PostgreSQL database tables.
+    *   `repository/`: Database interface repositories with custom JPQL and native SQL queries.
+    *   `dto/`: Request/Response Data Transfer Objects to handle structured JSON messaging.
+    *   `config/`: CORS policies, JWT token authentication filters, and Spring Security configurations.
 
 ## Technologies Used
 This project is built using:
